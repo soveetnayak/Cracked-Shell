@@ -8,43 +8,6 @@ run `./a.out` to run the shell
 type `exit` to exit the shell
 
 ----------
-`main.c` is the driver code for the shell
-
-`color.c` contains shortcut functions for using colors in the shell
-
-`prompt.c` contains the code for displaying prompt
-``` 
-<username@system_name:curr_dir>
-```
-`2cd.c` implements cd function for changing directory
-
-`2echo.c` implements echo and prints on the shell
-
-`2pwd.c` implements pwd and prints the path of current directory
-
-`3ls.c` implements ls with -a and -l flag
-
-`4foreground.c` forks the existing process and runs a child process in the foreground. The parent process waits for the child to terminate.
-
-`4background.c` forks the existing process and runs a child process in the foreground. The parent process does not wait for the child to terminate.
-
-`5pinfo.c` pinfo prints the process related info 
-
-`6checkbg.c` displays appropriate message when a background process exits
-
-`01redirection.c` implements > < >> redirection
-
-`02pipe.c` implement piping |
-
-`04jobs.c` implements functions jobs, sig, fg and bg
-
-`05signals.c` implements actions for Ctrl+C, Ctrl+D, Ctrl+Z
-
-`baywatch.c` conatins the code for the function baywatch along with its flags
-
-`replay.c` implements replay command
-
-----------
 Specifications Implemented :-
 
 * `pwd`: Displays current working directory
@@ -140,3 +103,41 @@ emacs
 gedit &
 emacs &
 ```
+----------
+`main.c` is the driver code for the shell
+
+`color.c` contains shortcut functions for using colors in the shell
+
+`prompt.c` contains the code for displaying prompt
+``` 
+<username@system_name:curr_dir>
+```
+`2cd.c` implements cd function for changing directory
+
+`2echo.c` implements echo and prints on the shell
+
+`2pwd.c` implements pwd and prints the path of current directory
+
+`3ls.c` implements ls with -a and -l flag
+
+`4foreground.c` forks the existing process and runs a child process in the foreground. The parent process waits for the child to terminate.
+
+`4background.c` forks the existing process and runs a child process in the foreground. The parent process does not wait for the child to terminate.
+
+`5pinfo.c` pinfo prints the process related info 
+
+`6checkbg.c` displays appropriate message when a background process exits
+
+`01redirection.c` implements > < >> redirection
+
+`02pipe.c` implement piping |
+
+`04jobs.c` implements functions jobs, sig, fg and bg
+
+`05signals.c` implements actions for Ctrl+C, Ctrl+D, Ctrl+Z
+
+`baywatch.c` conatins the code for the function baywatch along with its flags
+
+`replay.c` implements replay command
+
+----------
