@@ -1,4 +1,4 @@
-# OSN Assignment 1
+# OSN Assignment
 ## Monsoon 2021
 ## Cracked Shell
 
@@ -13,7 +13,7 @@ type `exit` to exit the shell
 `color.c` contains shortcut functions for using colors in the shell
 
 `prompt.c` contains the code for displaying prompt
-```
+``` 
 <username@system_name:curr_dir>
 ```
 `2cd.c` implements cd function for changing directory
@@ -43,6 +43,7 @@ type `exit` to exit the shell
 `baywatch.c` conatins the code for the function baywatch along with its flags
 
 `replay.c` implements replay command
+
 ----------
 Specifications Implemented :-
 
@@ -124,9 +125,11 @@ ls | grep *.txt > out.txt
 cat < in.txt | wc -l > lines.txt
 ```
 * Signal Handling
+```
     * CTRL-Z: Pushes any currently running foreground job into the background, and change its state from running to stopped
     * CTRL-C: Interrupt any currently running foreground job, by sending it the SIGINT signal
     * CTRL-D: Logs out of shell
+```
 * Foreground Process
 ```
 gedit
