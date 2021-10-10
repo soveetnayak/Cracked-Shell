@@ -4,39 +4,41 @@ void main_pipe(char *args[], int count, char home[], char last_wd[])
 {
     int i = 0;
 
-    int fd[2];
-    int fd2[2];
+    int fd_even[2];
+    int fd_odd[2];
 
     int input = 0;
     int output = 0;
+
     char buffer[100000], arg[10000], temp[10000];
     while (i < count)
     {
-        strcpy(arg, args[i]);
-        int oldout, oldin, ofd, ifd;
-        int r = 0;
-        char *part[10000], *part2[10000];
-
-        part[0] = strtok(arg, " \n");
-        int j = 0;
+        int oldout, oldin;
         int check;
-        while (part[j] != NULL)
+        strcpy(arg, args[i]);
+
+        char *store[10000];
+
+        oldout = dup(1);
+        oldin = dup(0);
+
+        int count = 0;
+        store[count] = strtok(arg, " \n");
+        while (store[count] != NULL)
         {
-            j++;
-            part[j] = strtok(NULL, " \n");
+            count++;
+            store[count] = strtok(NULL, " \n");
         }
 
         if (i % 2 == 0)
-        {
-            check = pipe(fd);
-            if (check < 0)
-                perror("Error: pipe could not be created\n");
-        }
+            check = pipe(fd_even);
         else
+            check = pipe(fd_odd);
+
+        if (check < 0)
         {
-            check = pipe(fd2);
-            if (check < 0)
-                perror("Error: pipe could not be created\n");
+            printf("Error: Pipe could not be created\n");
+            return;
         }
 
         pid_t pid = fork();
@@ -48,95 +50,79 @@ void main_pipe(char *args[], int count, char home[], char last_wd[])
         {
             if (i == 0)
             {
-                dup2(fd[1], 1); // output to pipe
-                close(fd[0]);   //closing input end of pipe
-                strcpy(temp, args[i]);
+                dup2(fd_even[1], 1); //output
+                close(fd_even[0]);
             }
             else if (i == count - 1)
             {
                 if (i % 2 == 1)
                 {
-                    // printf("came into odd end\n");
-                    dup2(fd[0], 0); //inputut from pipe
+                    dup2(fd_even[0], 0); //input
                 }
                 else
                 {
-                    // printf("came into even end\n");
-                    dup2(fd2[0], 0); //inputut from transit
+                    dup2(fd_odd[0], 0); //input
                 }
             }
             else if (i % 2 == 0)
             {
-                // printf("came into even middle\n");
-                dup2(fd2[0], 0); //inputut from transit
-                close(fd[0]);    // close inputut end of pipe
-                dup2(fd[1], 1);  // outputut to pipe
+                dup2(fd_odd[0], 0);  
+                close(fd_even[0]);   
+                close(fd_odd[1]);    
+                dup2(fd_even[1], 1); 
             }
             else if (i % 2 == 1)
             {
-                // printf("came into odd middle\n");
-                dup2(fd[0], 0);  //inputut from pipe
-                close(fd[1]);    // close outputut end of pipe
-                dup2(fd2[1], 1); // outputut to transit
+                dup2(fd_even[0], 0); 
+                close(fd_odd[0]);    
+                close(fd_even[1]);   
+                dup2(fd_odd[1], 1);  
             }
 
             strcpy(temp, args[i]);
             if (redirection_check(temp))
             {
-                redirect(part, j, args[i], home, last_wd);
+                redirect(store, count, args[i], home, last_wd);
             }
-            // printf("now from exec\n");
             else
             {
-                int z = execvp(part[0], part); // exec
-                if (z < 0)
-                    perror("Error: command not found\n");
-
-                if (r == 0)
-                    exit(0);
+                if (execvp(store[0], store) < 0)
+                    printf("Error: Command not found\n");
             }
             exit(0);
         }
         else
         {
-            wait(NULL);
+            if (wait(NULL) < 0)
+                printf("Error: wait failed\n");
 
             if (i == 0)
             {
-                close(fd[1]);
-                if (input == 1)
-                {
-                    dup2(oldin, 0);
-                    close(ifd);
-                }
+                close(fd_even[1]);
             }
             else if (i == count - 1)
             {
                 if (i % 2 == 0)
-                    close(fd2[0]);
+                    close(fd_odd[0]);
                 else
-                    close(fd[0]);
-
-                if (output == 1)
-                {
-                    dup2(oldout, 1);
-                    close(ofd);
-                }
+                    close(fd_even[0]);
             }
             else if (i % 2 == 0)
             {
-                close(fd2[0]);
-                close(fd[1]);
+                close(fd_odd[0]);
+                close(fd_even[1]);
             }
             else if (i % 2 == 1)
             {
-                close(fd[0]);
-                close(fd2[1]);
+                close(fd_even[0]);
+                close(fd_odd[1]);
             }
         }
 
         i++;
     }
+    dup2(STDIN_FILENO, 0);
+    dup2(STDOUT_FILENO, 1);
 }
 
 int redirection_check(char command[])
@@ -150,14 +136,14 @@ int redirection_check(char command[])
         count++;
         store[count] = strtok(NULL, " \n");
     }
-        for (int i = 0; i < count; i++)
+    for (int i = 0; i < count; i++)
     {
         if (strcmp(store[i], ">") == 0)
             redirect_flag += 1;
         else if (strcmp(store[i], "<") == 0)
             redirect_flag += 1;
         else if (strcmp(store[i], ">>") == 0)
-            redirect_flag == 1;
+            redirect_flag += 1;
     }
     return redirect_flag;
 }

@@ -12,42 +12,42 @@ void printjobs(char *store[], int count)
         process temp_arr[processes_count];
         for (int i = 0; i < processes_count; i++)
         {
-            temp_arr[i] = processes[i+1];
+            temp_arr[i] = processes[i + 1];
         }
 
         qsort(temp_arr, processes_count, sizeof(process), comparator);
 
-        if (count == 1)
+        if (count == 1 || count == 3)
         {
-            
+
             for (int i = 0; i < processes_count; i++)
             {
                 char file[10000], status, s[100000];
-                
+
                 sprintf(file, "/proc/%d/stat", temp_arr[i].pid);
-                
+
                 FILE *fd;
                 fd = fopen(file, "r");
 
-                
                 if (fd == NULL)
-                    perror("Error: no such process exists\n");
+                    printf("Error: no such process exists\n");
                 else
                 {
-                    
-                    fscanf(fd, "%*d %*s %c %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d", &status);
-                    printf("7"); fflush(stdout);
+
+                    fscanf(fd, "%*d %*s %c", &status);
+                    printf("7");
+                    fflush(stdout);
                     fclose(fd);
+                    printf("7");
+                    fflush(stdout);
 
-                    printf("7"); fflush(stdout);
+                    if (status == 'T')
+                        printf("[%d] Stopped %s [%d]\n", i, temp_arr[i].name, temp_arr[i].pid);
+                    else if(status == 'R' || status == 'S')
+                        printf("[%d] Running %s [%d]\n", i, temp_arr[i].name, temp_arr[i].pid);
+
+                    fflush(stdout);
                 }
-
-                if (status == 'T')
-                    printf("[%d] Stopped %s [%d]\n", i, temp_arr[i].name, temp_arr[i].pid);
-                else
-                    printf("[%d] Running %s [%d]\n", i, temp_arr[i].name, temp_arr[i].pid);
-
-                fflush(stdout);
             }
         }
         else if (count == 2)
@@ -65,21 +65,22 @@ void printjobs(char *store[], int count)
                 FILE *fd;
                 fd = fopen(file, "r");
                 if (fd < 0)
-                    perror("Error: no such process exists\n");
+                    printf("Error: no such process exists\n");
                 else
                 {
-                    fscanf(fd, "%*d %*s %c %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d", &status);
+                    fscanf(fd, "%*d %*s %c", &status);
                     fclose(fd);
                 }
 
                 if (status == 'T' && store[1][1] == 's')
                     printf("[%d] Stopped %s [%d]\n", i, temp_arr[i].name, temp_arr[i].pid);
-                else if (store[1][1] == 'r')
+                else if ((status == 'R' || status == 'S') && store[1][1] == 'r')
                     printf("[%d] Running %s [%d]\n", i, temp_arr[i].name, temp_arr[i].pid);
             }
         }
         else
         {
+
             printf("Too many arguments\n");
         }
     }
