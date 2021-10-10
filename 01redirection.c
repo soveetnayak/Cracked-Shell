@@ -4,17 +4,18 @@ void redirect(char *store[], int count, char *string, char home[], char last_wd[
 {
     int append = 0, inp = 0, outp = 0;
     int status;
-
+    char tempc[1000];
     for (int i = 0; i < count; i++)
     {
-        if (strcmp(store[i], ">") == 0)
+        strcpy(tempc, store[i]);
+        if (tempc[0] == '>')
             outp += 1;
-        else if (strcmp(store[i], "<") == 0)
+        else if (tempc[0] == '<')
             inp += 1;
-        else if (strcmp(store[i], ">>") == 0)
-            append == 1;
-    }
 
+        if (tempc[0] == '>' && tempc[1] == '>')
+            append += 1;
+    }
     char *command[10000];
     char input[10000], output[10000];
 
@@ -102,11 +103,13 @@ void redirect(char *store[], int count, char *string, char home[], char last_wd[
     }
     else if ((outp > 0 || append > 0) && inp == 0) //OUTPUT REDIRECTION
     {
-        // printf("Came into output\n");
         int out = dup(STDOUT_FILENO);
         int pid = fork();
         if (append == 1)
+        {
+
             fd1 = open(output, O_APPEND | O_WRONLY | O_CREAT, 0644);
+        }
         else
             fd1 = open(output, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 

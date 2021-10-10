@@ -35,11 +35,7 @@ void printjobs(char *store[], int count)
                 {
 
                     fscanf(fd, "%*d %*s %c", &status);
-                    printf("7");
-                    fflush(stdout);
                     fclose(fd);
-                    printf("7");
-                    fflush(stdout);
 
                     if (status == 'T')
                         printf("[%d] Stopped %s [%d]\n", i, temp_arr[i].name, temp_arr[i].pid);
@@ -143,7 +139,6 @@ void bg(char *store[])
         {
             if (processes[i].job_no == job_no)
             {
-                kill(processes[job_no].pid, SIGTTIN);
                 kill(processes[job_no].pid, SIGCONT);
                 flag = 1;
             }

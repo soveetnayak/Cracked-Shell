@@ -10,7 +10,7 @@ void main_pipe(char *args[], int count, char home[], char last_wd[])
     int input = 0;
     int output = 0;
 
-    char buffer[100000], arg[10000], temp[10000];
+    char arg[10000], temp[10000];
     while (i < count)
     {
         int oldout, oldin;
