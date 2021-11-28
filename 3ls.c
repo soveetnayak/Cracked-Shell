@@ -8,6 +8,7 @@ void function_ls(char *store[], int count, char *cwd, char *home)
 {
     a_flag = 0;
     l_flag = 0;
+    // printf("Heree");
     for (int i = 0; i < 100; i++)
     {
         strcpy(list_dir[i], "Empty_Dir");
@@ -65,7 +66,7 @@ void function_ls(char *store[], int count, char *cwd, char *home)
 
 void ls_and_lsa(char *cwd, char *home)
 {
-
+    // printf("Heree");
     if (strcmp(list_dir[0], "Empty_Dir") == 0)
     {
         struct dirent *entry;
@@ -89,7 +90,7 @@ void ls_and_lsa(char *cwd, char *home)
         {
             if (!a_flag && entry->d_name[0] == '.')
                 continue;
-            if (entry->d_type == DT_DIR)
+            if (/*entry->d_type == DT_DIR*/1)
             {
                 printf("%s ", entry->d_name);
             }
@@ -134,7 +135,7 @@ void ls_and_lsa(char *cwd, char *home)
                     {
                         if (!a_flag && entry->d_name[0] == '.')
                             continue;
-                        if (entry->d_type == DT_DIR)
+                        if (/*entry->d_type == DT_DIR*/1)
                         {
                             printf("%s ", entry->d_name);
                         }

@@ -196,6 +196,7 @@ int main()
 
                     char cwd[10000];
                     getcwd(cwd, sizeof(cwd));
+                    // printf("Heree");
                     function_ls(store, count, cwd, home);
                 }
                 else if (strcmp(store[0], "jobs") == 0)
